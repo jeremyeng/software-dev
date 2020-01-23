@@ -149,4 +149,5 @@ int main(int argc, char **argv)
     testIsBool();
     testIsInt();
     testIsFloat();
+    testIsString();
 }

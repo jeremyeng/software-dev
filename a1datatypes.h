@@ -20,7 +20,7 @@ typedef enum {
 int isString(std::string data)
 {
     // if the start and end of the strings are quotes, return true
-    if(data[0] == 34 && data[data.length()] == 34) {
+    if(data[0] == 34 && data[data.length() - 1] == 34) {
         return true;
     }
 
@@ -28,7 +28,7 @@ int isString(std::string data)
     //if it is a single string with no spaces, return true, else return false
     for(int i = 0; i < data.length(); i++)
     {
-        if (data[i] = 32) {
+        if (data[i] == 32) {
             return false;
         }
     }
@@ -194,4 +194,22 @@ void testIsFloat() {
     testFloatHelper("-1.", false);
     testFloatHelper("-11421a4124.2124124124512", false);
 };
+
+void testIsStringHelper(const char *input, bool testAgainst) {
+    std::string testInput(input);
+    if (isString(testInput) != testAgainst) {
+        std::cout << "ERROR: " << input << " for isString was " << testAgainst << "\n";
+    }
+}
+
+void testIsString() {
+    testIsStringHelper("abcdef", true);
+    testIsStringHelper("\"abcdefed\"", true);
+    testIsStringHelper("\"abc def def\"", true);
+    testIsStringHelper("\"abc def\" def\"", true);
+    testIsStringHelper("abc das", false);
+    testIsStringHelper("\"abc def\" def", false);
+    testIsStringHelper("\"abc def def", false);
+    testIsStringHelper("abc def def\"", false);
+}
 #endif
