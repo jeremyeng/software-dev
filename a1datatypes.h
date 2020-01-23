@@ -19,7 +19,21 @@ typedef enum {
  */ 
 int isString(std::string data)
 {
-    //TODO
+    // if the start and end of the strings are quotes, return true
+    if(data[0] == 34 && data[data.length() - 1] == 34) {
+        return true;
+    }
+
+
+    //if it is a single string with no spaces, return true, else return false
+    for(int i = 0; i < data.length(); i++)
+    {
+        if (data[i] == 32) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -28,7 +42,51 @@ int isString(std::string data)
  */ 
 int isFloat(std::string data)
 {
-    //TODO
+    if (data.length() == 0) {
+        return false;
+    }
+
+    int count = 0;
+
+    //check if there is a + or -, and increment past it if there is
+    if (data[count] == 43 || data[count] == 45) {
+        count++;
+    }
+
+    bool decimalSeen = false;
+
+    //check for a decimal and increment past it
+    if (data[count] == 46) {
+        count++;
+        decimalSeen = true;
+    }
+
+    //if all characters are digits and there is one dot, it is an float
+    for(int i = count; i < data.length(); i++)
+    {
+        //check for demical
+        if (data[i] == 46) {
+            if (decimalSeen) {
+                return false;
+            }
+
+            decimalSeen = true;
+            i++;
+
+            // the input 1. is not valid
+            if (i >= data.length()) {
+                return false;
+            }
+        } 
+
+        //if it is not a number 0-10, return false
+        if(data[i] > 57 || data[i] < 48)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -38,12 +96,19 @@ int isFloat(std::string data)
  */ 
 int isInt(std::string data)
 {
-    if(data.length() == 0) 
-    {
+    if (data.length() == 0) {
         return false;
     }
+
+    int count = 0;
+
+    //check for + and - and increment past it 
+    if (data[count] == 43 || data[count] == 45) {
+        count++;
+    }
+
     //if all characters are digits, it is an int
-    for(int i = 0; i < data.length(); i++)
+    for(int i = count; i < data.length(); i++)
     {
         if(data[i] > 57 || data[i] < 48)
         {
@@ -73,75 +138,78 @@ int isBool(std::string data)
 
 }
 
+void testIsBoolHelper(const char* input, bool testAgainst) {
+     std::string testString(input);
+    if(isBool(testString) != testAgainst)
+    {
+        std::cout << "ERROR: " << input << " for isBool was " << testAgainst << "\n";
+    }
+}
+
 void testIsBool()
 {
-    std::string testString("1");
-    if(!isBool(testString))
-    {
-        std::cout<<"failed 1\n";
-    }
+    testIsBoolHelper("1", true);
+    testIsBoolHelper("0", true);
+    testIsBoolHelper("", false);
+    testIsBoolHelper("2", false);
+    testIsBoolHelper("a", false);
+    testIsBoolHelper("abc", false);
+}
 
-    testString = "2";
-    if(isBool(testString))
+void testIsIntHelper(const char* input, bool testAgainst) {
+    std::string testString(input);
+    if(isInt(testString) != testAgainst)
     {
-        std::cout<<"failed 2\n";
-    }
-
-    testString = "";
-    if(isBool(testString))
-    {
-        std::cout<<"failed 3\n";
-    }
-
-    testString = "0";
-    if(!isBool(testString))
-    {
-        std::cout<<"failed 4\n";
+        std::cout << "ERROR: " << input << " for isInt was " << testAgainst << "\n";
     }
 }
 
 void testIsInt()
 {
-    std::string testString("1");
-    if(!isInt(testString))
-    {
-        std::cout<<"failed 1\n";
-    }
+    testIsIntHelper("0", true);
+    testIsIntHelper("1", true);
+    testIsIntHelper("2", true);
+    testIsIntHelper("1234", true);
+    testIsIntHelper("+12", true);
+    testIsIntHelper("-12", true);
+    testIsIntHelper("", false);
+    testIsIntHelper("12.34", false);
+    testIsIntHelper("12345a", false);
+    testIsIntHelper("- 12", false);
+} 
 
-    testString = "2";
-    if(!isInt(testString))
-    {
-        std::cout<<"failed 2\n";
+void testFloatHelper(const char *input, bool testAgainst) {
+    std::string testInput(input);
+    if (isFloat(testInput) != testAgainst) {
+        std::cout << "ERROR: " << input << " for isFloat was " << testAgainst << "\n";
     }
+}
 
-    testString = "";
-    if(isInt(testString))
-    {
-        std::cout<<"failed 3\n";
-    }
+void testIsFloat() {
+    testFloatHelper("1.0", true);
+    testFloatHelper("+1.0", true);
+    testFloatHelper("-1.0", true);
+    testFloatHelper("-114214124.2124124124512", true);
+    testFloatHelper("-1 .0", false);
+    testFloatHelper("-1.", false);
+    testFloatHelper("-11421a4124.2124124124512", false);
+};
 
-    testString = "0";
-    if(!isInt(testString))
-    {
-        std::cout<<"failed 4\n";
+void testIsStringHelper(const char *input, bool testAgainst) {
+    std::string testInput(input);
+    if (isString(testInput) != testAgainst) {
+        std::cout << "ERROR: " << input << " for isString was " << testAgainst << "\n";
     }
+}
 
-    testString = "1234";
-    if(!isInt(testString))
-    {
-        std::cout<<"failed 5\n";
-    }
-
-    testString = "12.34";
-    if(isInt(testString))
-    {
-        std::cout<<"failed 6\n";
-    }
-
-    testString = "12345a";
-    if(isInt(testString))
-    {
-        std::cout<<"failed 6\n";
-    }
+void testIsString() {
+    testIsStringHelper("abcdef", true);
+    testIsStringHelper("\"abcdefed\"", true);
+    testIsStringHelper("\"abc def def\"", true);
+    testIsStringHelper("\"abc def\" def\"", true);
+    testIsStringHelper("abc das", false);
+    testIsStringHelper("\"abc def\" def", false);
+    testIsStringHelper("\"abc def def", false);
+    testIsStringHelper("abc def def\"", false);
 }
 #endif

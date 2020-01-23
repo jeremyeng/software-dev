@@ -145,4 +145,9 @@ int main(int argc, char **argv)
     }
     readFile(targetFileName);
     getColumnTypes(targetFileName);
+    //readFile("input.txt");
+    testIsBool();
+    testIsInt();
+    testIsFloat();
+    testIsString();
 }
