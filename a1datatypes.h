@@ -19,7 +19,21 @@ typedef enum {
  */ 
 int isString(std::string data)
 {
-    //TODO
+    // if the start and end of the strings are quotes, return true
+    if(data[0] == 34 && data[data.length()] == 34) {
+        return true;
+    }
+
+
+    //if it is a single string with no spaces, return true, else return false
+    for(int i = 0; i < data.length(); i++)
+    {
+        if (data[i] = 32) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -34,19 +48,23 @@ int isFloat(std::string data)
 
     int count = 0;
 
+    //check if there is a + or -, and increment past it if there is
     if (data[count] == 43 || data[count] == 45) {
         count++;
     }
 
     bool decimalSeen = false;
+
+    //check for a decimal and increment past it
     if (data[count] == 46) {
         count++;
         decimalSeen = true;
     }
 
-    //if all characters are digits, it is an int
+    //if all characters are digits and there is one dot, it is an float
     for(int i = count; i < data.length(); i++)
     {
+        //check for demical
         if (data[i] == 46) {
             if (decimalSeen) {
                 return false;
@@ -55,11 +73,13 @@ int isFloat(std::string data)
             decimalSeen = true;
             i++;
 
+            // the input 1. is not valid
             if (i >= data.length()) {
                 return false;
             }
         } 
 
+        //if it is not a number 0-10, return false
         if(data[i] > 57 || data[i] < 48)
         {
             return false;
@@ -82,6 +102,7 @@ int isInt(std::string data)
 
     int count = 0;
 
+    //check for + and - and increment past it 
     if (data[count] == 43 || data[count] == 45) {
         count++;
     }
