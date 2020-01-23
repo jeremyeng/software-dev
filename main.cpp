@@ -4,6 +4,9 @@
 #include <fstream>
 #include "a1datatypes.h"
 
+size_t row_size;
+
+
 
 void readFile(const char *filename)
 {
@@ -20,17 +23,6 @@ void readFile(const char *filename)
     myFile.close();
 }
 
-/**
- * @brief determine the data type of this row
- * @note if any value in the row is a string, then the row is a string
- * @note else if any value is a float then the row is a float
- * @note else if any value is an int then the row is an int
- * @note else the row is bool
- */ 
-void determineDataType(std::string row)
-{
-
-}
 
 /**
  * @brief get the value of the given row at the given column

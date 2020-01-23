@@ -6,6 +6,13 @@
 //this file defines functions to check if data of of the data types
 //as defined in assignment one
 
+typedef enum {
+    STRING, 
+    BOOL,
+    FLOAT,
+    INT
+} assignmentData_t;
+
 /**
  * @brief determine if the given data is of string type
  * @note data will be given as it is in the file but without the <> separators
@@ -31,6 +38,10 @@ int isFloat(std::string data)
  */ 
 int isInt(std::string data)
 {
+    if(data.length() == 0) 
+    {
+        return false;
+    }
     //if all characters are digits, it is an int
     for(int i = 0; i < data.length(); i++)
     {
