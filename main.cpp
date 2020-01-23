@@ -4,11 +4,46 @@
 #include <string>
 #include <fstream>
 #include <cstring>
+#include <algorithm>
 #include "a1datatypes.h"
 
-size_t row_size;
+size_t row_size = 0;
+std::vector<assignmentData_t> column_types;
 
+/**
+ * @brief determine the data type of each of the columns
+ * @param filename the name of the target file
+ */ 
+void getColumnTypes(const char *filename)
+{
+    /*
+    1 - get the data from each row into a string vector
+    2 - clean those strings
+    3 - check the data type of each string
+    4 - on the first pass, put that data type into the column types vector
+    5 - on subsequent passes, follow the heirarchy and replace accordingly
+    */
+    
+    std::vector<std::string> dataValues;
+    
+    std::ifstream myFile;
+    std::string fileInput;
+    myFile.open(filename);
 
+    while (myFile)
+    {
+        std::getline(myFile, fileInput);
+        //std::cout<<fileInput<<"\n";
+        size_t thisLength = std::count(fileInput.begin(), fileInput.end(), '<');
+        if(thisLength > row_size)
+        {
+            row_size = thisLength;
+        }
+    }
+    std::cout<<"Row length: "<<row_size<<"\n";
+
+    myFile.close();
+}
 
 void readFile(const char *filename)
 {
@@ -19,8 +54,14 @@ void readFile(const char *filename)
     while (myFile)
     {
         std::getline(myFile, fileInput);
-        std::cout<<fileInput<<"\n";
+        //std::cout<<fileInput<<"\n";
+        size_t thisLength = std::count(fileInput.begin(), fileInput.end(), '<');
+        if(thisLength > row_size)
+        {
+            row_size = thisLength;
+        }
     }
+    std::cout<<"Row length: "<<row_size<<"\n";
 
     myFile.close();
 }
@@ -103,4 +144,5 @@ int main(int argc, char **argv)
         
     }
     readFile(targetFileName);
+    getColumnTypes(targetFileName);
 }
