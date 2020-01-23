@@ -1,5 +1,4 @@
-#ifndef A1DATATYPES_H
-#define A1DATATYPES_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -23,7 +22,6 @@ int isString(std::string data)
     if(data[0] == 34 && data[data.length() - 1] == 34) {
         return true;
     }
-
 
     //if it is a single string with no spaces, return true, else return false
     for(int i = 0; i < data.length(); i++)
@@ -137,79 +135,3 @@ int isBool(std::string data)
     }
 
 }
-
-void testIsBoolHelper(const char* input, bool testAgainst) {
-     std::string testString(input);
-    if(isBool(testString) != testAgainst)
-    {
-        std::cout << "ERROR: " << input << " for isBool was " << testAgainst << "\n";
-    }
-}
-
-void testIsBool()
-{
-    testIsBoolHelper("1", true);
-    testIsBoolHelper("0", true);
-    testIsBoolHelper("", false);
-    testIsBoolHelper("2", false);
-    testIsBoolHelper("a", false);
-    testIsBoolHelper("abc", false);
-}
-
-void testIsIntHelper(const char* input, bool testAgainst) {
-    std::string testString(input);
-    if(isInt(testString) != testAgainst)
-    {
-        std::cout << "ERROR: " << input << " for isInt was " << testAgainst << "\n";
-    }
-}
-
-void testIsInt()
-{
-    testIsIntHelper("0", true);
-    testIsIntHelper("1", true);
-    testIsIntHelper("2", true);
-    testIsIntHelper("1234", true);
-    testIsIntHelper("+12", true);
-    testIsIntHelper("-12", true);
-    testIsIntHelper("", false);
-    testIsIntHelper("12.34", false);
-    testIsIntHelper("12345a", false);
-    testIsIntHelper("- 12", false);
-} 
-
-void testFloatHelper(const char *input, bool testAgainst) {
-    std::string testInput(input);
-    if (isFloat(testInput) != testAgainst) {
-        std::cout << "ERROR: " << input << " for isFloat was " << testAgainst << "\n";
-    }
-}
-
-void testIsFloat() {
-    testFloatHelper("1.0", true);
-    testFloatHelper("+1.0", true);
-    testFloatHelper("-1.0", true);
-    testFloatHelper("-114214124.2124124124512", true);
-    testFloatHelper("-1 .0", false);
-    testFloatHelper("-1.", false);
-    testFloatHelper("-11421a4124.2124124124512", false);
-};
-
-void testIsStringHelper(const char *input, bool testAgainst) {
-    std::string testInput(input);
-    if (isString(testInput) != testAgainst) {
-        std::cout << "ERROR: " << input << " for isString was " << testAgainst << "\n";
-    }
-}
-
-void testIsString() {
-    testIsStringHelper("abcdef", true);
-    testIsStringHelper("\"abcdefed\"", true);
-    testIsStringHelper("\"abc def def\"", true);
-    testIsStringHelper("\"abc def\" def\"", true);
-    testIsStringHelper("abc das", false);
-    testIsStringHelper("\"abc def\" def", false);
-    testIsStringHelper("\"abc def def", false);
-    testIsStringHelper("abc def def\"", false);
-}
-#endif

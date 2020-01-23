@@ -5,78 +5,17 @@
 #include <fstream>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 #include "a1datatypes.h"
+#include "sorer.h"
+#include "test.h"
 
-size_t row_size = 0;
-std::vector<assignmentData_t> column_types;
-
-/**
- * @brief determine the data type of each of the columns
- * @param filename the name of the target file
- */ 
-void getColumnTypes(const char *filename)
-{
-    /*
-    1 - get the data from each row into a string vector
-    2 - clean those strings
-    3 - check the data type of each string
-    4 - on the first pass, put that data type into the column types vector
-    5 - on subsequent passes, follow the heirarchy and replace accordingly
-    */
-    
-    std::vector<std::string> dataValues;
-    
-    std::ifstream myFile;
-    std::string fileInput;
-    myFile.open(filename);
-
-    while (myFile)
-    {
-        std::getline(myFile, fileInput);
-        //std::cout<<fileInput<<"\n";
-        size_t thisLength = std::count(fileInput.begin(), fileInput.end(), '<');
-        if(thisLength > row_size)
-        {
-            row_size = thisLength;
-        }
+void printColumnTypes(std::vector<assignmentData_t> * column_types) {
+    for (size_t i = 0; i < column_types->size(); i++) {
+        std::cout << column_types->at(i) << " ";
     }
-    std::cout<<"Row length: "<<row_size<<"\n";
-
-    myFile.close();
+    std::cout << "\n";
 }
-
-void readFile(const char *filename)
-{
-    std::ifstream myFile;
-    std::string fileInput;
-    myFile.open(filename);
-
-    while (myFile)
-    {
-        std::getline(myFile, fileInput);
-        //std::cout<<fileInput<<"\n";
-        size_t thisLength = std::count(fileInput.begin(), fileInput.end(), '<');
-        if(thisLength > row_size)
-        {
-            row_size = thisLength;
-        }
-    }
-    std::cout<<"Row length: "<<row_size<<"\n";
-
-    myFile.close();
-}
-
-
-/**
- * @brief get the value of the given row at the given column
- * @param row the string representing the data at that row
- * @param column the column to target
-*/
-void getColumn(std::string row, size_t column)
-{
-
-}
-
 int main(int argc, char **argv)
 {
     char * targetFileName;
@@ -143,11 +82,16 @@ int main(int argc, char **argv)
         }
         
     }
-    readFile(targetFileName);
-    getColumnTypes(targetFileName);
-    //readFile("input.txt");
+
+    size_t row_size = getMaxFieldRowSize(targetFileName);
+
+    std::vector<assignmentData_t> column_types;
+    getColumnTypes(&column_types, targetFileName, row_size);
+    std::cout << "Column Types: ";
+    printColumnTypes(&column_types);
     testIsBool();
     testIsInt();
     testIsFloat();
     testIsString();
+    testGetRowFieldVector();
 }

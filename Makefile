@@ -1,6 +1,6 @@
 main: main.cpp
-	g++ main.cpp -o test
+	g++ main.cpp -std=c++11 -o test
 
 run:
 	make main
-	./test
+	./test -f input.txt
