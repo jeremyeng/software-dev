@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <fstream>
 #include <cstring>
@@ -95,8 +96,11 @@ int main(int argc, char **argv)
             missing_idx_b = atoi(argv[i + 2]);
             i+=2;
         }
+        else
+        {
+            std::cout<< "bad argument ignored: "<<argv[i]<<"\n";
+        }
+        
     }
-    //readFile("input.txt");
-    testIsBool();
-    testIsInt();
+    readFile(targetFileName);
 }
