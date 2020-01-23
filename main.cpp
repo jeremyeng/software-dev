@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <string>
 #include <fstream>
+#include "a1datatypes.h"
 
 
 void readFile(const char *filename)
@@ -15,6 +16,8 @@ void readFile(const char *filename)
         std::getline(myFile, fileInput);
         std::cout<<fileInput<<"\n";
     }
+
+    myFile.close();
 }
 
 /**
@@ -41,5 +44,7 @@ void getColumn(std::string row, size_t column)
 
 int main(int argc, char **argv)
 {
-    readFile("input.txt");
+    //readFile("input.txt");
+    testIsBool();
+    testIsInt();
 }
