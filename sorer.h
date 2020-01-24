@@ -73,11 +73,15 @@ void getColumnTypes(std::vector<assignmentData_t> *column_types, const char *fil
     std::string file_input;
     my_file.open(file_name);
 
-    while (my_file)
+    //only the first 500 lines matter
+    size_t count = 0;
+
+    while (my_file && count < 500)
     {
         std::getline(my_file, file_input);
         dataValues = getRowFieldVector(&file_input);
         getRowDataTypes(dataValues, *column_types, row_size);
+        count++;
     }
 
     my_file.close();
@@ -91,7 +95,10 @@ size_t getMaxFieldRowSize(const char *file_name)
     size_t row_size = 0;
     myFile.open(file_name);
 
-    while (myFile)
+    //only the first 500 lines matter
+    size_t count = 0;
+
+    while (myFile && count < 500)
     {
         std::getline(myFile, file_input);
         size_t this_length = std::count(file_input.begin(), file_input.end(), '<');
@@ -99,6 +106,7 @@ size_t getMaxFieldRowSize(const char *file_name)
         {
             row_size = this_length;
         }
+        count++;
     }
     std::cout << "Row length: " << row_size << "\n";
 
