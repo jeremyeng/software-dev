@@ -99,8 +99,6 @@ int main(int argc, char **argv)
 
     std::vector<assignmentData_t> column_types;
     getColumnTypes(&column_types, targetFileName, row_size);
-    std::cout << "Column Types: ";
-    printColumnTypes(&column_types);
 
     if (print_col_type)
     {
