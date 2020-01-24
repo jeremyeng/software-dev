@@ -139,6 +139,8 @@ size_t getMaxFieldRowSize(const char *file_name)
     size_t row_size = 0;
     myFile.open(file_name);
 
+    
+
     Args * args = Args::getInstance();
 
     if(args->from)
@@ -149,9 +151,15 @@ size_t getMaxFieldRowSize(const char *file_name)
 
     //only the first 500 lines matter
     size_t count = 0;
+    size_t bytes_read = 0;
 
     while (myFile && count < 500)
     {
+        if(args->len && bytes_read > args->len_value)
+        {
+            myFile.close();
+            return row_size;
+        }
         std::getline(myFile, file_input);
         size_t this_length = std::count(file_input.begin(), file_input.end(), '<');
         if (this_length > row_size)
@@ -159,6 +167,7 @@ size_t getMaxFieldRowSize(const char *file_name)
             row_size = this_length;
         }
         count++;
+        bytes_read += file_input.length();
     }
     //std::cout << "Row length: " << row_size << "\n";
 
@@ -185,6 +194,8 @@ std::string getRow(size_t row, const char *filename)
         myFile.seekg(args->from_value);
     }
 
+    size_t bytes_read = 0;
+
     for (size_t index = 1; index <= row; index++)
     {
         if (!myFile)
@@ -192,9 +203,14 @@ std::string getRow(size_t row, const char *filename)
             myFile.close();
             return "";
         }
+        if(args->len && bytes_read >= args->len_value)
+        {
+            return "";
+        }
         if (index == row)
         {
             std::getline(myFile, file_input);
+            bytes_read += file_input.length();
             myFile.close();
             //TODO remove debug line
             return file_input;
