@@ -1,7 +1,7 @@
 SoR File Processor
 
 - To build the program in docker, run ./docker_build.sh.
-- To run the program in docker, run ./run_in_docker.sh.
+- To test the program in docker, run ./test_in_docker.sh.
 
 Main.cpp
 Here are the supported command line arguments
@@ -57,6 +57,6 @@ Supporting files that enable these interactions:
             the file. This vector is compiled of an enum = { STRING, BOOL, FLOAT, INT }.
         std::string getRowColValue(size_t row, size_t col, const char *filename)
             This function gets the value of a of cell based off row and column values.
-            
+
 
 
