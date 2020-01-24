@@ -89,6 +89,7 @@ void getColumnTypes(std::vector<assignmentData_t> *column_types, const char *fil
     }
 
     my_file.close();
+
 }
 
 //returns the number of fields in the row with the most fields
@@ -112,7 +113,7 @@ size_t getMaxFieldRowSize(const char *file_name)
         }
         count++;
     }
-    std::cout << "Row length: " << row_size << "\n";
+    //std::cout << "Row length: " << row_size << "\n";
 
     myFile.close();
     return row_size;
@@ -121,7 +122,7 @@ size_t getMaxFieldRowSize(const char *file_name)
 /**
  * @brief get the given row from a file
  */
-const char *getRow(size_t row, const char *filename)
+std::string getRow(size_t row, const char *filename)
 {
     std::ifstream myFile;
     std::string file_input;
@@ -131,12 +132,15 @@ const char *getRow(size_t row, const char *filename)
     {
         if (!myFile)
         {
+            myFile.close();
             return "";
         }
         if (index == row)
         {
             std::getline(myFile, file_input);
-            return file_input.c_str();
+            myFile.close();
+            //TODO remove debug line
+            return file_input;
         }
     }
 }
@@ -147,10 +151,18 @@ const char *getRow(size_t row, const char *filename)
  * @param column the column to target
  * @param column_types the types each column belongs to
 */
-std::string getColumn(std::string *row, size_t column, std::vector<assignmentData_t> &column_types)
+std::string getColumn(std::string *row, size_t column, std::vector<assignmentData_t>  * column_types)
 {
     std::vector<std::string> *values = getRowFieldVector(row);
-    assignmentData_t dataTypeOfColumn = column_types[column];
+
+    //std::cout<<*row<<"has "<<values->size()<<" data points\n";
+
+    assignmentData_t dataTypeOfColumn = column_types->at(column);
+    if(column > values->size())
+    {
+        //std::cout << "row too short\n";
+        return "Invalid";
+    }
     switch (dataTypeOfColumn)
     {
     case INT:
@@ -182,4 +194,16 @@ std::string getColumn(std::string *row, size_t column, std::vector<assignmentDat
         return std::string("invalid");
         break;
     }
+}
+
+std::string getRowColValue(size_t row, size_t col, const char * filename)
+{
+    std::string rowData = getRow(row, filename) ;
+    //std::cout<<"row data: "<<rowData<<"\n";
+    size_t row_size = getMaxFieldRowSize(filename);
+    std::vector<assignmentData_t> columnTypes;
+    
+    getColumnTypes(&columnTypes, filename, row_size);
+
+    return getColumn(&rowData, col, &columnTypes);
 }

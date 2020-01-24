@@ -94,4 +94,6 @@ int main(int argc, char **argv)
     testIsFloat();
     testIsString();
     testGetRowFieldVector();
+
+    testGetColumn();
 }
