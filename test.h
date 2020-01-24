@@ -27,7 +27,8 @@ void testGetColumn()
     // std::cout<< getColumn(&row, 5, &columnTypes) << "\n";
     // std::cout<< getColumn(&row, 1, &columnTypes) << "\n";
 
-    std::cout<<getRowColValue(1, 1, "input.txt")<<"\n";
+    testStringsAreEqual(getRowColValue(1, 1, "input.txt"), "string");
+    testStringsAreEqual(getRowColValue(1, 5, "input.txt"), "invalid");
 }
 
 void testGetRowFieldVector()
