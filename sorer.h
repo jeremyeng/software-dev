@@ -67,13 +67,13 @@ void getRowDataTypes(std::vector<std::string> *row_data, std::vector<assignmentD
 {
     if (column_types.size() < row_size)
     {
-        for (int i = 0; i < row_size; i++)
+        for (size_t i = 0; i < row_size; i++)
         {
             column_types.push_back(assignmentData_t::BOOL);
         }
     }
 
-    for (int index = 0; index < row_data->size(); index++)
+    for (size_t index = 0; index < row_data->size(); index++)
     {
         if (isInt(row_data->at(index)) && !isBool(row_data->at(index)) && column_types.at(index) != assignmentData_t::FLOAT && column_types.at(index) != assignmentData_t::STRING)
         {
@@ -176,7 +176,7 @@ std::string getRow(size_t row, const char *filename)
     std::ifstream myFile;
     std::string file_input;
     myFile.open(filename);
-
+    
     Args * args = Args::getInstance();
 
     if(args->from)
@@ -185,7 +185,7 @@ std::string getRow(size_t row, const char *filename)
         myFile.seekg(args->from_value);
     }
 
-    for (int index = 1; index <= row; index++)
+    for (size_t index = 1; index <= row; index++)
     {
         if (!myFile)
         {
