@@ -183,6 +183,7 @@ std::string getRow(size_t row, const char *filename)
             return file_input;
         }
     }
+    return "";
 }
 
 /**
@@ -238,11 +239,11 @@ std::string getColumn(std::string *row, size_t column, std::vector<assignmentDat
             return values->at(column);
         }
         break;
-
     default:
         return INVALID;
         break;
     }
+    return INVALID;
 }
 
 /**

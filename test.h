@@ -131,3 +131,12 @@ void testIsString() {
     testIsStringHelper("\"abc def def", false);
     testIsStringHelper("abc def def\"", false);
 }
+
+void runTests() {
+    testIsBool();
+    testIsInt();
+    testIsFloat();
+    testIsString();
+    testGetRowFieldVector();
+    testGetColumn();
+}
