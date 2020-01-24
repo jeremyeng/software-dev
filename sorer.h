@@ -26,22 +26,25 @@ std::vector<std::string> *getRowFieldVector(std::string *rowData)
     return &rowFields;
 }
 
-void getRowDataTypes(std::vector<std::string> *row_data, std::vector<assignmentData_t> *column_types, size_t row_size)
+void getRowDataTypes(std::vector<std::string> *row_data, std::vector<assignmentData_t> &column_types, size_t row_size)
 {
-    for (int i = 0; i < row_size; i++)
+    if (column_types.size() < row_size)
     {
-        column_types->push_back(assignmentData_t::BOOL);
+        for (int i = 0; i < row_size; i++)
+        {
+            column_types.push_back(assignmentData_t::BOOL);
+        }
     }
 
     for (int index = 0; index < row_data->size(); index++)
     {
-        if (isInt(row_data->at(index)) && column_types->at(index) != assignmentData_t::FLOAT && column_types->at(index) != assignmentData_t::STRING)
+        if (isInt(row_data->at(index)) && !isBool(row_data->at(index)) && column_types.at(index) != assignmentData_t::FLOAT && column_types.at(index) != assignmentData_t::STRING)
         {
-            column_types->insert(index, assignmentData_t::INT);
+            column_types[index] = assignmentData_t::INT;
         }
-        else if (isFloat(row_data->at(index)) && column_types->at(index) != assignmentData_t::STRING)
+        else if (isFloat(row_data->at(index)) && column_types.at(index) != assignmentData_t::STRING)
         {
-            column_types->insert(index, assignmentData_t::FLOAT);
+            column_types[index] = assignmentData_t::FLOAT;
         }
         else if (isString(row_data->at(index)))
         {
@@ -74,7 +77,7 @@ void getColumnTypes(std::vector<assignmentData_t> *column_types, const char *fil
     {
         std::getline(my_file, file_input);
         dataValues = getRowFieldVector(&file_input);
-        getRowDataTypes(dataValues, column_types, row_size);
+        getRowDataTypes(dataValues, *column_types, row_size);
     }
 
     my_file.close();
@@ -85,13 +88,12 @@ size_t getMaxFieldRowSize(const char *file_name)
 {
     std::ifstream myFile;
     std::string file_input;
-    size_t row_size;
+    size_t row_size = 0;
     myFile.open(file_name);
 
     while (myFile)
     {
         std::getline(myFile, file_input);
-        //std::cout<<fileInput<<"\n";
         size_t this_length = std::count(file_input.begin(), file_input.end(), '<');
         if (this_length > row_size)
         {
