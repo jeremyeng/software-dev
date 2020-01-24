@@ -24,7 +24,7 @@ int isString(std::string data)
     }
 
     //if it is a single string with no spaces, return true, else return false
-    for(int i = 0; i < data.length(); i++)
+    for(size_t i = 0; i < data.length(); i++)
     {
         if (data[i] == 32) {
             return false;
@@ -60,7 +60,7 @@ int isFloat(std::string data)
     }
 
     //if all characters are digits and there is one dot, it is an float
-    for(int i = count; i < data.length(); i++)
+    for(size_t i = count; i < data.length(); i++)
     {
         //check for demical
         if (data[i] == 46) {
@@ -106,7 +106,7 @@ int isInt(std::string data)
     }
 
     //if all characters are digits, it is an int
-    for(int i = count; i < data.length(); i++)
+    for(size_t i = count; i < data.length(); i++)
     {
         if(data[i] > 57 || data[i] < 48)
         {
