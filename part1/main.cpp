@@ -6,19 +6,11 @@
 #include <cstring>
 #include <algorithm>
 #include <vector>
-#include "a1datatypes.h"
-#include "sorer.h"
-#include "test.h"
-#include "args.h"
 
-// void printColumnTypes(std::vector<assignmentData_t> *column_types)
-// {
-//     for (size_t i = 0; i < column_types->size(); i++)
-//     {
-//         std::cout << column_types->at(i) << " ";
-//     }
-//     std::cout << "\n";
-// }
+#include "typeChecker.h"
+#include "sorer.h"
+#include "args.h"
+#include "test.h"
 
 void printColType(Args *args) {
     if (args->print_col_type)

@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include "a1datatypes.h"
+#include "typeChecker.h"
 #include "sorer.h"
 
 void testStringsAreEqual(std::string s1, const char* s2) {
@@ -16,17 +16,6 @@ void testStringsAreEqual(std::string s1, const char* s2) {
 
 void testGetColumn()
 {
-
-    // const char * filename = "input.txt";
-
-    // std::string row(getRow(1, "input.txt"));
-    // size_t row_size = getMaxFieldRowSize("input.txt");
-    // std::vector<assignmentData_t> columnTypes;
-    // getColumnTypes(&columnTypes, "input.txt", row_size);
-
-    // std::cout<< getColumn(&row, 5, &columnTypes) << "\n";
-    // std::cout<< getColumn(&row, 1, &columnTypes) << "\n";
-
     testStringsAreEqual(getRowColValue(1, 1, "input.txt"), "string");
     testStringsAreEqual(getRowColValue(1, 5, "input.txt"), "invalid");
 }
@@ -46,13 +35,6 @@ void testGetRowFieldVector()
     testStringsAreEqual(result->at(1), "123");
     testStringsAreEqual(result->at(2), "1");
 }
-
-// void testGetColumnTypes() {
-//     std::string testvalue("<abc> <123> <1> <5.64>");
-//     std::vector<std::string> *result = getRowFieldVector(&testvalue);
-//     getColumnTypes(&result, "input.txt", );
-// }
-
 
 void testIsBoolHelper(const char* input, bool testAgainst) {
      std::string testString(input);

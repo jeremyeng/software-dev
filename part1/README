@@ -1,0 +1,62 @@
+SoR File Processor
+
+- To build the program in docker, run ./docker_build.sh.
+- To run the program in docker, run ./run_in_docker.sh.
+
+Main.cpp
+Here are the supported command line arguments
+    -f  str     // path to SoR file to be read
+    -from uint  // starting position in the file (in bytes)
+    -len uint   // number of bytes to read
+    -print_col_type uint  // print the type of a column: BOOL, INT, FLOAT, STRING
+    -print_col_idx uint uint  // the first argument is the column, the second is the offset
+    -is_missing_idx uint uint // is there a missing in the specified column offset
+
+Here are some example interations:
+    $ ./sorer -f "data.sor" -from 0 -len 100 -print_col_type 0
+    BOOL
+    $ ./ sorer -f "data.sor" -from 0 -len 100 -print_col_type 2
+    STRING
+    $ ./sorer -f "data.sor" -from 0 -len 100 -is_missing_idx 2 0
+    0
+    $ ./sorer -f "data.sor" -from 0 -len 100 -is_missing_idx 2 1
+    1
+    $ ./sorer -f "data.sor" -from 0 -len 100 -is_missing_idx 2 2
+    1
+    $ ./sorer -f "data.sor" -from 0 -len 100 -print_col_idx 2 0
+    "hi"
+    $ ./sorer -f "data.sor" -from 5 -len 100 -print_col_idx 1 0
+    12
+
+Supporting files that enable these interactions:
+    args.h
+        This class holds all of the information regarding the command line arguments that the
+        user entered and how the program should act. It parses the command line arguments in its 
+        constructors, then stores that data.
+    typeChecker.h
+        This class holds functions to determine what kind of data type an input is. We use these 
+        functions to determine the schema of the .sor file.
+            bool isBool(std::string data);
+                This function determines whether the input string is a valid boolean.
+            bool isInt(std::string data);
+                This function determines whether the input string is a valid integer.
+            bool isFloat(std::string data);
+                This function determines whether the input string is a valid float.
+            bool isString(std::string data);
+                This function determines whether the input string is a valid string.
+    sorer.h 
+        This class holds the functions that do the heavy lifting of the program. These functions
+        determine the schema and return data structures to represent the code. The main functions 
+        of this program are described below.
+
+        size_t getMaxFieldRowSize(const char *file_name)
+            This function get the number of fields in the row with the most fields in the .sor file. 
+            This enables us to determine the schema.
+        void getColumnTypes(std::vector<assignmentData_t> *column_types, const char *file_name, size_t row_size)
+            This function mutates the column_types array and creates a vector which represents the schema of 
+            the file. This vector is compiled of an enum = { STRING, BOOL, FLOAT, INT }.
+        std::string getRowColValue(size_t row, size_t col, const char *filename)
+            This function gets the value of a of cell based off row and column values.
+            
+
+

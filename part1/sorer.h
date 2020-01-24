@@ -7,7 +7,7 @@
 #include <cstring>
 #include <algorithm>
 #include <vector>
-#include "a1datatypes.h"
+#include "typeChecker.h"
 #include "args.h"
 
 std::string sanatizeStr(std::string *str)
