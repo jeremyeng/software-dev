@@ -14,6 +14,17 @@ void testStringsAreEqual(std::string s1, const char* s2) {
     }
 }
 
+void testGetColumn()
+{
+    const char * filename = "input.txt";
+    std::string row(getRow(1, "input.txt"));
+    size_t row_size = getMaxFieldRowSize("input.txt");
+    std::vector<assignmentData_t> columnTypes;
+    getColumnTypes(&columnTypes, "input.txt", row_size);
+
+    getColumn(&row, 1, *columnTypes);
+}
+
 void testGetRowFieldVector()
 {
     std::string testvalue("<abc> <123> <1> <5.64>");

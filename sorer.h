@@ -9,6 +9,10 @@
 #include <vector>
 #include "a1datatypes.h"
 
+/**
+ * @brief get a vector containing all the fields in a given row
+ * @param rowData a string representing all the row's data
+ */
 std::vector<std::string> *getRowFieldVector(std::string *rowData)
 {
     static std::vector<std::string> rowFields;
@@ -115,10 +119,67 @@ size_t getMaxFieldRowSize(const char *file_name)
 }
 
 /**
+ * @brief get the given row from a file
+ */
+const char *getRow(size_t row, const char *filename)
+{
+    std::ifstream myFile;
+    std::string file_input;
+    myFile.open(filename);
+
+    for (int index = 1; index <= row; index++)
+    {
+        if (!myFile)
+        {
+            return "";
+        }
+        if (index == row)
+        {
+            std::getline(myFile, file_input);
+            return file_input.c_str();
+        }
+    }
+}
+
+/**
  * @brief get the value of the given row at the given column
  * @param row the string representing the data at that row
  * @param column the column to target
+ * @param column_types the types each column belongs to
 */
-void getColumn(std::string row, size_t column)
+std::string getColumn(std::string *row, size_t column, std::vector<assignmentData_t> &column_types)
 {
+    std::vector<std::string> *values = getRowFieldVector(row);
+    assignmentData_t dataTypeOfColumn = column_types[column];
+    switch (dataTypeOfColumn)
+    {
+    case INT:
+        if (isInt(values->at(column)) && !isBool(values->at(column)))
+        {
+            return values->at(column);
+        }
+        break;
+    case STRING:
+    if (isString(values->at(column)))
+        {
+            return values->at(column);
+        }
+        break;
+    case BOOL:
+    if (isBool(values->at(column)))
+        {
+            return values->at(column);
+        }
+        break;
+    case FLOAT:
+    if (isInt(values->at(column)) && !isBool(values->at(column)))
+        {
+            return values->at(column);
+        }
+        break;
+
+    default:
+        return std::string("invalid");
+        break;
+    }
 }
