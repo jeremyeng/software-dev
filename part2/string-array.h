@@ -77,7 +77,7 @@ public:
 
     /**
      * @brief get the size of this array
-     * @return the size of this array
+     * @return the number of elements in this array
      */
     virtual size_t size();
 

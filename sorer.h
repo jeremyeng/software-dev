@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <vector>
 #include "a1datatypes.h"
+#include "args.h"
 
 std::string sanatizeStr(std::string *str)
 {
@@ -138,6 +139,14 @@ size_t getMaxFieldRowSize(const char *file_name)
     size_t row_size = 0;
     myFile.open(file_name);
 
+    Args * args = Args::getInstance();
+
+    if(args->from)
+    {
+        //advance the file by x bytes
+        myFile.seekg(args->from_value);
+    }
+
     //only the first 500 lines matter
     size_t count = 0;
 
@@ -168,6 +177,14 @@ std::string getRow(size_t row, const char *filename)
     std::string file_input;
     myFile.open(filename);
 
+    Args * args = Args::getInstance();
+
+    if(args->from)
+    {
+        //advance the file by x bytes
+        myFile.seekg(args->from_value);
+    }
+
     for (int index = 1; index <= row; index++)
     {
         if (!myFile)
@@ -183,6 +200,7 @@ std::string getRow(size_t row, const char *filename)
             return file_input;
         }
     }
+    return "";
 }
 
 /**
@@ -238,11 +256,11 @@ std::string getColumn(std::string *row, size_t column, std::vector<assignmentDat
             return values->at(column);
         }
         break;
-
     default:
         return INVALID;
         break;
     }
+    return INVALID;
 }
 
 /**
@@ -283,8 +301,10 @@ bool isInvalid(size_t row, size_t col, const char *filename)
  * @param col the column to look at
  * @param filename the file to read from
  */
-assignmentData_t getColumnType(size_t col, const char *filename)
+assignmentData_t getColumnType(Args *args)
 {
+    size_t col = args->col_type_value;
+    const char * filename = args->targetFileName;
     size_t row_size = getMaxFieldRowSize(filename);
     std::vector<assignmentData_t> columnDataTypes;
 

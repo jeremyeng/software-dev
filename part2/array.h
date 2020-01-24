@@ -31,7 +31,7 @@ public:
     virtual int pushBack(Object *o);
 
     /**
-     * @brief remove the last object from this array=
+     * @brief remove the last object from this array
      * @return 1 if successful and 0 if unsuccessful
      */
     virtual int popBack();
@@ -80,7 +80,7 @@ public:
 
     /**
      * @brief get the size of this array
-     * @return the size of this array
+     * @return the number of elements in this array
      */
     virtual size_t size();
 

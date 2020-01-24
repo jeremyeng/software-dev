@@ -9,100 +9,21 @@
 #include "a1datatypes.h"
 #include "sorer.h"
 #include "test.h"
+#include "args.h"
 
-void printColumnTypes(std::vector<assignmentData_t> *column_types)
-{
-    for (size_t i = 0; i < column_types->size(); i++)
+// void printColumnTypes(std::vector<assignmentData_t> *column_types)
+// {
+//     for (size_t i = 0; i < column_types->size(); i++)
+//     {
+//         std::cout << column_types->at(i) << " ";
+//     }
+//     std::cout << "\n";
+// }
+
+void printColType(Args *args) {
+    if (args->print_col_type)
     {
-        std::cout << column_types->at(i) << " ";
-    }
-    std::cout << "\n";
-}
-int main(int argc, char **argv)
-{
-    char * targetFileName = nullptr;
-
-    bool from = false;
-    bool len = false;
-    bool print_col_type = false;
-    bool print_col_idx = false;
-    bool is_missing_idx = false;
-
-    size_t from_value = 0;
-    size_t len_value = 0;
-    size_t col_type_value = 0;
-    size_t col_idx_a = 0;
-    size_t col_idx_b = 0;
-    size_t missing_idx_a = 0;
-    size_t missing_idx_b = 0;
-
-    //ignore the first arg, which is the name of the program
-    for (int i = 1; i < argc; i++)
-    {
-        if (strcmp(argv[i], "-f") == 0)
-        {
-            targetFileName = argv[i + 1];
-            //iterate so we don't bother to check the arg value
-            i++;
-        }
-        else if (strcmp(argv[i], "-from") == 0)
-        {
-            from = true;
-            from_value = atoi(argv[i + 1]);
-            i++;
-        }
-        else if (strcmp(argv[i], "-len") == 0)
-        {
-            len = true;
-            len_value = atoi(argv[i + 1]);
-            i++;
-        }
-        else if (strcmp(argv[i], "-print_col_type") == 0)
-        {
-            print_col_type = true;
-            col_type_value = atoi(argv[i + 1]);
-            i++;
-        }
-        else if (strcmp(argv[i], "-print_col_idx") == 0)
-        {
-            print_col_idx = true;
-            col_idx_a = atoi(argv[i + 1]);
-            col_idx_b = atoi(argv[i + 2]);
-            i += 2;
-        }
-        else if (strcmp(argv[i], "-is_missing_idx") == 0)
-        {
-            is_missing_idx = true;
-            missing_idx_a = atoi(argv[i + 1]);
-            missing_idx_b = atoi(argv[i + 2]);
-            i += 2;
-        }
-        else
-        {
-            std::cout << "bad argument ignored: " << argv[i] << "\n";
-        }
-    }
-
-    if(targetFileName == nullptr)
-    {
-        std::cout<<"error - no file name given\n";
-        return 1;
-    }
-
-    size_t row_size = getMaxFieldRowSize(targetFileName);
-
-    if(row_size == 0)
-    {
-        std::cout<<"Bad file. Exiting.\n";
-        return 1;
-    }
-
-    std::vector<assignmentData_t> column_types;
-    getColumnTypes(&column_types, targetFileName, row_size);
-
-    if (print_col_type)
-    {
-        assignmentData_t d_type = getColumnType(col_type_value, targetFileName);
+        assignmentData_t d_type = getColumnType(args);
         switch (d_type)
         {
         case assignmentData_t::INT:
@@ -121,10 +42,12 @@ int main(int argc, char **argv)
             break;
         }
     }
+}
 
-    if(print_col_idx)
+void printColIdx(Args *args) {
+    if(args->print_col_idx)
     {
-        std::string result = getRowColValue(col_idx_a, col_idx_b, targetFileName);
+        std::string result = getRowColValue(args->col_idx_a, args->col_idx_b, args->targetFileName);
         if(isString(result))
         {
             std::cout<<"\""<<result<<"\"\n";
@@ -134,10 +57,12 @@ int main(int argc, char **argv)
             std::cout<<result<<'\n';
         }
     }
+}
 
-    if(is_missing_idx)
+void isMissingIdx(Args *args) {
+    if(args->is_missing_idx)
     {
-        if(isInvalid(missing_idx_a, missing_idx_b, targetFileName))
+        if(isInvalid(args->missing_idx_a, args->missing_idx_b, args->targetFileName))
         {
             std::cout<<"1\n";
         }
@@ -146,12 +71,33 @@ int main(int argc, char **argv)
             std::cout<<"0\n";
         }
     }
+}
 
-    testIsBool();
-    testIsInt();
-    testIsFloat();
-    testIsString();
-    testGetRowFieldVector();
+int main(int argc, char **argv)
+{
+    Args *args = Args::getInstance();
+    args->setArgs(argc, argv);
+   
+    if(args->targetFileName == nullptr)
+    {
+        std::cout<<"error - no file name given\n";
+        return 1;
+    }
 
-    testGetColumn();
+    size_t row_size = getMaxFieldRowSize(args->targetFileName);
+
+    if(row_size == 0)
+    {
+        std::cout<<"Bad file. Exiting.\n";
+        return 1;
+    }
+
+    std::vector<assignmentData_t> column_types;
+    getColumnTypes(&column_types, args->targetFileName, row_size);
+
+    printColType(args);
+    printColIdx(args);
+    isMissingIdx(args);
+
+    runTests();
 }
