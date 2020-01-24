@@ -40,11 +40,11 @@ void testGetRowFieldVector()
     testStringsAreEqual(result->at(2), "1");
     testStringsAreEqual(result->at(3), "5.64");
 
-    // std::string testvalue2 = "<     abc     > <123>     <   1 >";
-    // result = getRowFieldVector(&testvalue2);
-    // testStringsAreEqual(result->at(0), "abc");
-    // testStringsAreEqual(result->at(1), "123");
-    // testStringsAreEqual(result->at(2), "1");
+    std::string testvalue2 = "<     abc     > <  123       >     <   1 >";
+    result = getRowFieldVector(&testvalue2);
+    testStringsAreEqual(result->at(0), "abc");
+    testStringsAreEqual(result->at(1), "123");
+    testStringsAreEqual(result->at(2), "1");
 }
 
 // void testGetColumnTypes() {

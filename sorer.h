@@ -9,6 +9,36 @@
 #include <vector>
 #include "a1datatypes.h"
 
+std::string sanatizeStr(std::string *str)
+{
+    size_t count = 0;
+
+    while (str->at(count) == 32)
+    {
+        count++;
+    }
+    size_t start = count;
+    if (str->at(count) == 34)
+    {
+        size_t end = str->find(34, count + 1);
+        if (end >= str->length()) 
+        {
+            end = str->length();
+            return str->substr(start, end - start);
+        }
+        return str->substr(start, end - start + 1);
+    }
+    else
+    {
+        size_t end = str->find(32, start);
+        if (end >= str->length()) 
+        {
+            end = str->length();
+        }
+        return str->substr(start, end - start);
+    }
+}
+
 /**
  * @brief get a vector containing all the fields in a given row
  * @param rowData a string representing all the row's data
@@ -24,7 +54,8 @@ std::vector<std::string> *getRowFieldVector(std::string *rowData)
         size_t start = rowData->find(60, count);
         size_t end = rowData->find(62, start);
         // increment start beacuse start is the the < and substract 1 from size because of the >
-        rowFields.push_back(rowData->substr(start + 1, end - start - 1));
+        std::string fullStr = rowData->substr(start + 1, end - start - 1);
+        rowFields.push_back(sanatizeStr(&fullStr));
         count = end + 1;
     }
 
@@ -92,7 +123,6 @@ void getColumnTypes(std::vector<assignmentData_t> *column_types, const char *fil
     }
 
     my_file.close();
-
 }
 
 /**
@@ -100,7 +130,7 @@ void getColumnTypes(std::vector<assignmentData_t> *column_types, const char *fil
  * @param file_name the name of the target file
  * @return the number of fields
  * @note only the first 500 rows are checked
- */ 
+ */
 size_t getMaxFieldRowSize(const char *file_name)
 {
     std::ifstream myFile;
@@ -161,9 +191,9 @@ std::string getRow(size_t row, const char *filename)
  * @param column the column to target
  * @param column_types the types each column belongs to
 */
-std::string getColumn(std::string *row, size_t column, std::vector<assignmentData_t>  * column_types)
+std::string getColumn(std::string *row, size_t column, std::vector<assignmentData_t> *column_types)
 {
-    char const *  INVALID = "invalid";
+    char const *INVALID = "invalid";
 
     std::vector<std::string> *values = getRowFieldVector(row);
 
@@ -172,12 +202,12 @@ std::string getColumn(std::string *row, size_t column, std::vector<assignmentDat
     assignmentData_t dataTypeOfColumn = column_types->at(column);
 
     // if we look beyond the max column, we error
-    if(column > column_types->size())
+    if (column > column_types->size())
     {
         return "failed";
     }
 
-    if(column > values->size())
+    if (column > values->size())
     {
         //std::cout << "row too short\n";
         return INVALID;
@@ -191,19 +221,19 @@ std::string getColumn(std::string *row, size_t column, std::vector<assignmentDat
         }
         break;
     case STRING:
-    if (isString(values->at(column)))
+        if (isString(values->at(column)))
         {
             return values->at(column);
         }
         break;
     case BOOL:
-    if (isBool(values->at(column)))
+        if (isBool(values->at(column)))
         {
             return values->at(column);
         }
         break;
     case FLOAT:
-    if (isInt(values->at(column)) && !isBool(values->at(column)))
+        if (isInt(values->at(column)) && !isBool(values->at(column)))
         {
             return values->at(column);
         }
@@ -221,14 +251,14 @@ std::string getColumn(std::string *row, size_t column, std::vector<assignmentDat
  * @param col the target col, indexed from 0 on
  * @param filename the name of the target file
  * @return the string being either the value of "invalid"
- */ 
-std::string getRowColValue(size_t row, size_t col, const char * filename)
+ */
+std::string getRowColValue(size_t row, size_t col, const char *filename)
 {
-    std::string rowData = getRow(row, filename) ;
+    std::string rowData = getRow(row, filename);
     //std::cout<<"row data: "<<rowData<<"\n";
     size_t row_size = getMaxFieldRowSize(filename);
     std::vector<assignmentData_t> columnTypes;
-    
+
     getColumnTypes(&columnTypes, filename, row_size);
 
     return getColumn(&rowData, col, &columnTypes);
@@ -242,8 +272,8 @@ std::string getRowColValue(size_t row, size_t col, const char * filename)
  * @return true if there is an invalid value, false if there is not
  * @note if the data at the index does not match the schema for its column
  * then we consider it invalid
- */ 
-bool isInvalid(size_t row, size_t col, const char * filename)
+ */
+bool isInvalid(size_t row, size_t col, const char *filename)
 {
     return getRowColValue(row, col, filename) == "invalid";
 }
@@ -252,8 +282,8 @@ bool isInvalid(size_t row, size_t col, const char * filename)
  * @brief get the data type of the given column in the given file
  * @param col the column to look at
  * @param filename the file to read from
- */ 
-assignmentData_t getColumnType(size_t col, const char * filename)
+ */
+assignmentData_t getColumnType(size_t col, const char *filename)
 {
     size_t row_size = getMaxFieldRowSize(filename);
     std::vector<assignmentData_t> columnDataTypes;
