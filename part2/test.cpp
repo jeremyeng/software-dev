@@ -15,6 +15,8 @@ void testArray()
         assert(array.size() == 1);
         assert(array.valueAt(0) == &o1);
     }
+    
+    array.erase();
 
     array.pushBack(&o1);
     array.pushBack(&o2);
